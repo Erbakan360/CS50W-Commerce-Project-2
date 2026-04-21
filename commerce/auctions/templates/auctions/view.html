@@ -1,0 +1,135 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% comment %} Displays a message if message exists {% endcomment %}
+{% if message %}
+    <h4>*{{ message }}*</h4>
+{% endif %}
+
+{% for i in List %}
+    <h2>Viewing Listing {{ i.Title }}</h2>
+    <div class="View">
+        <div class="col-10" style="margin: auto; border-radius: 10px;">
+            <img class="image" src="{{ i.Image }}" alt="Image for {{ i.Title }} is unavailable" width="100%" height="auto">
+        </div>
+        <table style="width:100%; margin: auto; padding:5px;">
+            <tbody>
+                <tr>
+                    <td style="width:20%"><h5> Name  </h5></td>
+                    <td style="width:80%"><h5> {{ i.Title }} </h5></td>
+                </tr>
+                <tr>
+                    <td><h5> Description</td>
+                    <td><h5> {{ i.Description }} </td>
+                </tr>
+                <tr>
+                    <td><h5>Price </h5></td>
+                    <td><h5>${{ i.Price }} </h5></td>
+                </tr>
+                <tr>
+                    <td><h5>Category </h5></td>
+                    <td><h5>{{ i.Category }} </h5></td>
+                </tr>
+                <tr>
+                    <td><h5>Posted on </h5></td>
+                    <td><h5>{{ i.time }} </h5></td>
+                </tr>
+                <tr>
+                    <td><h5> Sold By </h5></td>
+                    <td><h5> {{ i.Seller }} </h5></td>
+                </tr>
+                <tr>
+                    <td><h5> Bidding Status </h5></td>
+                        {% if i.Status is True%}
+                            <td style="color:green"><h5><b> Open </b></h5></td>
+                        {% else %}
+                            <td style="color:red"><h5><b> Closed <b></h5></td>
+                        {% endif %}
+                </tr>
+            </tbody>
+        </table>
+        <div class="col-2" style="margin: auto;">
+        {% if Len > 0 %}
+            <form action="remove" method="post">
+                <textarea hidden id="id" name="id">{{i.id}}</textarea>
+                <input class="btn btn-primary" type="Submit" value="Remove item from watchlist">
+                {% csrf_token %}
+            </form>
+        {% else %}
+            <form action="watchlist" method="post">
+                {% csrf_token %}
+                <textarea hidden id="id" name="id">{{i.id}}</textarea>
+                <input class="btn btn-primary" type="Submit" value="Add item to Watchlist">
+            </form>
+        {% endif %}
+        </div>
+    </div>
+    <hr>
+    {% if Bids %}
+        <div class="View">
+        <h4> Bids </h4>
+            {% for j in Bids%}
+                {% if j.Bid == i %}
+                    <b style="color: blue;">{{ j.user }} </b> Bids <b style="color:#cc00cc;">${{ j.price }} </b><u style="color: #999999;"> {{ j.time }} </u> <br>
+                {% endif %}
+            {% endfor %} 
+        </div>
+    {% endif %}
+    <hr>
+            
+    {% if i.Status == False %}
+        {% for W in Winner %}
+            {% if W.Listiing.id == i.id %}
+                {% if W.Bidwinner %}
+                    <h4> The winner of this Bid is: <b style="color: blue;">{{ W.Bidwinner }}</b> </h4>
+                {% else %}
+                    <h4> The winner of the Bid is: <b style="color: blue;"> {{ i.Seller }}</b> </h4>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {% if i.Seller == User%}
+            <form action="close" method="post">
+                {% csrf_token %}
+                <textarea hidden id="id" name="id">{{i.id}}</textarea>
+                <input class="btn btn-primary" type="Submit" value="close bidding">
+            </form>        
+        {% else %}
+            <form action="bid" method="post">
+                <div class="form-group">
+                    <input class="form-control" id="Bid" name="Bid" placeholder="Place a Bid" type="number" min="0.00" step="0.01" />
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-primary" type="Submit" value="Place a bid">
+                </div>
+                <textarea hidden id="id" name="id">{{i.id}}</textarea>
+                {% csrf_token %}
+            </form>
+        {% endif %}
+            
+        <hr>
+            <form action="comment" method="post">
+                <div class="form-group">
+                    <input class="form-control" autofocus type="text" id="Title" name="Title" placeholder="Title">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="comment" name="comment" Placeholder="Comment"></textarea>
+                </div>
+                <textarea hidden id="id" name="id">{{i.id}}</textarea>
+                    {% csrf_token %}
+                <input class="btn btn-primary" type="Submit" value="Add a Comment">
+            </form>
+            {% if Comment %}
+                <div class="View">
+                {% for j in Comment%}
+                    {% if j.Com == i %}
+                        <p> <b style="color:#cc00cc;">{{ j.title }} </b> by <b style="color: blue;">{{ j.user }} </b> <u style="color: #999999;"> {{ j.time }} </u> <br>
+                            <strong> {{ j.comment }}  </strong> </p>
+                    {% endif %}
+                {% endfor %}
+                </div>
+            {% endif %}
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

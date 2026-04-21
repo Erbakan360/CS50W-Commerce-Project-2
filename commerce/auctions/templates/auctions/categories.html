@@ -1,0 +1,36 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h2> Categories </h2>
+
+<br>
+<form action="categories" method="post">
+    <div class="form-group">
+        <select class="form-control" id="Categories" name="Categories">
+            <option disabled selected value> -- select an option -- </option>
+            <option value="Accessories"> Accessories </option>
+            <option value="Automotive"> Automotive </option>
+            <option value="Books"> Books </option>
+            <option value="Computers"> Computers </option>
+            <option value="Electronics"> Electronics </option>
+            <option value="Fashion"> Fashion </option>
+            <option value="Furniture"> Furniture </option>
+            <option value="Supermarket"> Groceries </option>
+            <option value="Health"> Health </option>
+            <option value="Home Decor"> Home Decor </option>
+            <option value="Kitchen"> Kitchen </option>
+            <option value="Office Supplies"> Office Supplies </option>
+            <option value="Perfumes"> Perfumes </option>
+            <option value="Sports and Fitness"> Sports and Fitness </option>
+            <option value="Tools"> Tools </option>
+            <option value="Toys"> Toys </option>
+            <option value="Video Games"> Video Games </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="Search from category">
+        {% csrf_token %}
+    </div>
+</form>
+{% endblock %}

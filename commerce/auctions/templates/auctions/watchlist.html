@@ -1,0 +1,61 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2> Watchlist </h2>
+
+{% if Watchlist %}
+    {% for i in Watchlist %}
+        <div class="Listings" >   
+            <div class="col-4">
+                <img class="image" src="{{ i.Watchlisted.Image }}" alt="Image for {{ i.Watchlisted.Title }} is unavailable" width="450px" height="auto">
+            </div>
+            <div class="col-8">
+                <table style="width:100%">
+                    <tbody>
+                        <tr>
+                            <td style="width:20%"><h5> Name  </h5></td>
+                            <td style="width:80%"><h5> {{ i.Watchlisted.Title }} </h5></td>
+                        </tr>
+                        <tr>
+                            <td><h5>Description</h5></td>
+                            <td><h5>{{ i.Watchlisted.Description }} </h5></td>
+                        </tr>
+                        <tr>
+                            <td><h5>Price</h5></td>
+                            <td><h5>${{ i.Watchlisted.Price }}</h5></td>
+                        </tr>
+                        <tr>
+                            <td><h5>Category</h5></td>
+                            <td><h5>{{ i.Watchlisted.Category }} </h5></td>
+                        </tr>
+                        <tr>
+                            <td><h5>Posted on</h5></td>
+                            <td><h5>{{ i.Watchlisted.time }}</h5></td>
+                        </tr>
+                        <tr>
+                            <td><h5>Sold By</h5></td>
+                            <td><h5>{{ i.Watchlisted.Seller }} </h5></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center;"><h5>
+                                <form action="view" method="post">
+                                    {% csrf_token %}
+                                    <textarea hidden id="Title" name="Title">{{i.Watchlisted.Title}}</textarea>
+                                    <input class="btn btn-primary" type="Submit" value="View Listing">
+                                </form>
+                            </h5></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p> You don't seem to have any items in your watchlist. Press the button to find items that might interest you? </p>
+    <form action="/">
+        {% csrf_token %}
+        <input class="btn btn-primary" type="submit" value="Add an item">
+    </form>
+{% endif %}
+{% endblock %}

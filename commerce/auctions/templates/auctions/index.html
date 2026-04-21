@@ -1,0 +1,61 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ foo }}</h2>
+
+{% if List %}
+    {% for i in List %}
+    <div class="Listings" >   
+        <div class="col-4">
+            <img class="image" src="{{ i.Image }}" alt="Image for {{ i.Title }} is unavailable" width="450px" height="auto">
+        </div>
+        <div class="col-8">
+            <table style="width:100%">
+                <tbody>
+                    <tr>
+                        <td style="width:20%"><h5> Name</h5></td>
+                        <td style="width:80%"><h5> {{ i.Title }}</h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Description</h5></td>
+                        <td><h5>{{ i.Description }} </h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Price</h5></td>
+                        <td><h5>${{ i.Price }} </h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Category</h5></td>
+                        <td><h5>{{ i.Category }} </h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Posted on</h5></td>
+                        <td><h5>{{ i.time }}</h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Sold By</h5></td>
+                        <td><h5>{{ i.Seller }}</h5></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;"><h5>
+                            <form action="view" method="post">
+                                {% csrf_token %}
+                                <textarea hidden id="Title" name="Title">{{i.Title}}</textarea>
+                                <input class="btn btn-primary" type="Submit" value="View Listing">
+                            </form>
+                        </h5></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+    {% endfor %}
+{% else %}
+    {% if Searched %}
+        <div style="color:red;"> <h4>* No active listings in {{ Searched }} *</h4> </div>
+    {% else %}
+        <div style="color:red;"> <h4>* No active listings*</h4> </div>
+    {% endif %}
+{% endif %}
+{% endblock %}
